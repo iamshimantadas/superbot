@@ -1,8 +1,4 @@
-Here’s how you can structure your `README.md` file, including your author information and social media links:
-
----
-
-# Plugin Name
+# Super Bot
 
 This plugin provides several custom hooks for managing queries, settings, and CSV data in a WordPress environment. Below is a detailed description of each hook and its functionality. Some of the most popular WordPress themes like Astra, Divi, OceanWP, GeneratePress, Neve, Hestia, Avada, Sydney, Zakra, and Twenty Twenty-One etc. could works with it perfectly along with your custom theme too!
 
@@ -64,5 +60,3 @@ This plugin provides several custom hooks for managing queries, settings, and CS
 - 🎦 [YouTube](https://youtube.com/channel/UCrbf6B0CU9x-I4bQOYbJVGw)
 
 ---
-
-This `README.md` file should be included in the root directory of your GitHub repository to give users a clear understanding of the plugin, its functionality, and how they can connect with you.
