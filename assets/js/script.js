@@ -9,9 +9,6 @@
 
  jQuery(document).ready(function () {
 
-    console.warn("hula");
-    
-
     jQuery('#send-btn').on('click', function (e) {
         e.preventDefault();
 

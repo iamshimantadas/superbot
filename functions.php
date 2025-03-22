@@ -160,9 +160,9 @@ function superbot_search_answer()
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $userInput = sanitize_text_field($_POST['userInput']);
-        
+
         // check string lengh first
-        if(strlen($userInput) > 180){
+        if (strlen($userInput) > 180) {
             echo $response = "Your query length is very big! reduce it!";
             exit;
         }
@@ -182,7 +182,7 @@ function superbot_search_answer()
         if ($result) {
             $response = $result->answer;
 
-
+            /** STORING THE USER'S QUERY */
             try {
                 $ip = getenv('REMOTE_ADDR');
 
@@ -211,6 +211,8 @@ function superbot_search_answer()
                 $ip = NULL;
                 error_log($e->getMessage());
             }
+            /** END OF USER'S QUERY */
+
 
             $table = $wpdb->prefix . "chat_history";
             $wpdb->insert(
@@ -273,8 +275,6 @@ function superbot_search_answer()
 
                     try {
                         $ip = getenv('REMOTE_ADDR');
-
-                        // Check if the IP is localhost
                         if ($ip === '127.0.0.1' || $ip === '::1') {
                             $location = "Localhost";
                         } else {
@@ -312,6 +312,7 @@ function superbot_search_answer()
                     );
 
                 } else {
+                    /** NO CHAT TERMS FOUND */
                     $count = 0;
 
                     // if no terms found against user's query! then we will hit google's gemini api
@@ -321,7 +322,7 @@ function superbot_search_answer()
                         $arr = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC LIMIT 1");
 
                         $apiKey = $arr[0]->gemini_key;
-                        $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+                        $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
                         $business_name = $arr[0]->business_name;
                         $business_description = $arr[0]->business_description;
                         $common = "you should reply as for $business_name, $business_description";
@@ -697,27 +698,27 @@ function chatSettings()
     global $wpdb;
 
     try {
-       
-            $key = sanitize_text_field($_POST['key']);
-            $contact = str_replace('\\', '', $_POST['contact']);
-            $name = str_replace('\\', '', $_POST['business_name']);
-            $description = str_replace('\\', '', $_POST['description']);
-            $restriction = str_replace('\\', '', $_POST['restriction']);
+
+        $key = sanitize_text_field($_POST['key']);
+        $contact = str_replace('\\', '', $_POST['contact']);
+        $name = str_replace('\\', '', $_POST['business_name']);
+        $description = str_replace('\\', '', $_POST['description']);
+        $restriction = str_replace('\\', '', $_POST['restriction']);
 
 
-            $table = $wpdb->prefix . "chat_global_settings";
-            $wpdb->insert(
-                $table,
-                array(
-                    "gemini_key" => $key,
-                    "contact_us_link" => $contact,
-                    "business_name" => $name,
-                    "business_description" => $description,
-                    "restriction" => $restriction,
-                )
-            );
-            echo "success";
-     
+        $table = $wpdb->prefix . "chat_global_settings";
+        $wpdb->insert(
+            $table,
+            array(
+                "gemini_key" => $key,
+                "contact_us_link" => $contact,
+                "business_name" => $name,
+                "business_description" => $description,
+                "restriction" => $restriction,
+            )
+        );
+        echo "success";
+
 
     } catch (Exception $e) {
         echo $e->getMessage();
@@ -733,7 +734,7 @@ add_action('wp_ajax_nopriv_view_settings', 'viewSettings');
 function viewSettings()
 {
     global $wpdb;
-    $table = $wpdb->prefix."chat_global_settings";
+    $table = $wpdb->prefix . "chat_global_settings";
     $arr = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC LIMIT 1");
     echo json_encode($arr, true);
     exit;
@@ -754,7 +755,7 @@ function exportCSV()
 
     // Output column headers
     fputcsv($output, array('id', 'question', 'answer'));
-    $table = $wpdb->prefix."chats";
+    $table = $wpdb->prefix . "chats";
     $rows = $wpdb->get_results("SELECT id, question, answer FROM $table", ARRAY_A);
     foreach ($rows as $row) {
         fputcsv($output, $row);
@@ -767,14 +768,15 @@ function exportCSV()
 // hook - import_csv helps to import csv file data inside wp_chats table.
 add_action('wp_ajax_import_csv', 'importCSV');
 add_action('wp_ajax_nopriv_import_csv', 'importCSV');
-function importCSV() {
+function importCSV()
+{
     global $wpdb;
-    $table = $wpdb->prefix."chats";
+    $table = $wpdb->prefix . "chats";
 
     // Check if a file was uploaded
     if (isset($_FILES['file'])) {
         $file = $_FILES['file']['tmp_name'];
-        
+
         // Open the uploaded CSV file
         if (($handle = fopen($file, 'r')) !== false) {
             global $wpdb;
