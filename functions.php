@@ -5,135 +5,17 @@
 function extractImportantWords($sentence)
 {
     // Define a list of common stop words
-    $stopWords = array(
-        'i',
-        'me',
-        'my',
-        'myself',
-        'we',
-        'our',
-        'ours',
-        'ourselves',
-        'you',
-        'your',
-        'yours',
-        'yourself',
-        'yourselves',
-        'he',
-        'him',
-        'his',
-        'himself',
-        'she',
-        'her',
-        'hers',
-        'herself',
-        'it',
-        'its',
-        'itself',
-        'they',
-        'them',
-        'their',
-        'theirs',
-        'themselves',
-        'what',
-        'which',
-        'who',
-        'whom',
-        'this',
-        'that',
-        'these',
-        'those',
-        'am',
-        'is',
-        'are',
-        'was',
-        'were',
-        'be',
-        'been',
-        'being',
-        'have',
-        'has',
-        'had',
-        'having',
-        'do',
-        'does',
-        'did',
-        'doing',
-        'a',
-        'an',
-        'the',
-        'and',
-        'but',
-        'if',
-        'or',
-        'because',
-        'as',
-        'until',
-        'while',
-        'of',
-        'at',
-        'by',
-        'for',
-        'with',
-        'about',
-        'against',
-        'between',
-        'into',
-        'through',
-        'during',
-        'before',
-        'after',
-        'above',
-        'below',
-        'to',
-        'from',
-        'up',
-        'down',
-        'in',
-        'out',
-        'on',
-        'off',
-        'over',
-        'under',
-        'again',
-        'further',
-        'then',
-        'once',
-        'here',
-        'there',
-        'when',
-        'where',
-        'why',
-        'how',
-        'all',
-        'any',
-        'both',
-        'each',
-        'few',
-        'more',
-        'most',
-        'other',
-        'some',
-        'such',
-        'no',
-        'nor',
-        'not',
-        'only',
-        'own',
-        'same',
-        'so',
-        'than',
-        'too',
-        'very',
-        's',
-        't',
-        'can',
-        'will',
-        'just',
-        'don',
-        'should',
-        'now'
-    );
+    $stopWords = [
+        'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves',
+        'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their',
+        'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are',
+        'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an',
+        'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about',
+        'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up',
+        'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when',
+        'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor',
+        'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now'
+    ];
 
     // Convert the sentence to lowercase and split into words
     $words = preg_split('/\s+/', strtolower($sentence));
@@ -153,7 +35,7 @@ function extractImportantWords($sentence)
 }
 
 // ajax response handelling
-function superbot_search_answer()
+function mc_bot_search_answer()
 {
     global $wpdb;
 
@@ -168,7 +50,7 @@ function superbot_search_answer()
         }
 
         $response = "I'm sorry, I don't understand the question.";
-        $table_name = $wpdb->prefix . 'chats';
+        $table_name = $wpdb->prefix . 'mc_bot_chats';
 
         // Prepare the SQL query
         $sql = $wpdb->prepare(
@@ -214,7 +96,7 @@ function superbot_search_answer()
             /** END OF USER'S QUERY */
 
 
-            $table = $wpdb->prefix . "chat_history";
+            $table = $wpdb->prefix . "mc_bot_chat_history";
             $wpdb->insert(
                 $table,
                 array(
@@ -227,7 +109,7 @@ function superbot_search_answer()
 
         } else {
 
-            $table_name = $wpdb->prefix . 'chats';
+            $table_name = $wpdb->prefix . 'mc_bot_chats';
             $importantWords = extractImportantWords($userInput);
             $i = 0;
             $count = 0;
@@ -244,10 +126,9 @@ function superbot_search_answer()
                 $i++;
             }
 
-            // if wp_chats table has no word related strings then goes to wp_terms
             if ($count == 0) {
 
-                $table_name = $wpdb->prefix . 'chat_terms';
+                $table_name = $wpdb->prefix . 'mc_bot_chat_terms';
                 // passing question to get the important words -> returns an array
                 $importantWords = extractImportantWords($userInput);
                 $i = 0;
@@ -266,7 +147,7 @@ function superbot_search_answer()
                 // getting answer
                 if ($chat_id) {
                     $count = 0;
-                    $table_name = $wpdb->prefix . 'chats';
+                    $table_name = $wpdb->prefix . 'mc_bot_chats';
                     $result = $wpdb->get_row($wpdb->prepare("SELECT answer FROM $table_name WHERE id = %d", $chat_id));
                     if ($result) {
                         $response = $result->answer;
@@ -300,7 +181,7 @@ function superbot_search_answer()
                         error_log($e->getMessage());
                     }
 
-                    $table = $wpdb->prefix . "chat_history";
+                    $table = $wpdb->prefix . "mc_bot_chat_history";
                     $wpdb->insert(
                         $table,
                         array(
@@ -316,11 +197,122 @@ function superbot_search_answer()
                     $count = 0;
 
                     // if no terms found against user's query! then we will hit google's gemini api
-                    try {
-                        global $wpdb;
-                        $table = $wpdb->prefix . "chat_global_settings";
-                        $arr = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC LIMIT 1");
+                    // try {
+                    //     global $wpdb;
+                    //     $table = $wpdb->prefix . "mc_bot_chat_global_settings";
+                    //     $arr = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC LIMIT 1");
 
+                    //     $apiKey = $arr[0]->gemini_key;
+                    //     $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+                    //     $business_name = $arr[0]->business_name;
+                    //     $business_description = $arr[0]->business_description;
+                    //     $common = "you should reply as for $business_name, $business_description";
+                    //     $restrictions = $arr[0]->restriction;
+                    //     $contact_page = $arr[0]->contact_us_link;
+
+
+                    //     $data = json_encode([
+                    //         'contents' => [
+                    //             [
+                    //                 'parts' => [
+                    //                     [
+                    //                         'text' => "$userInput, $common, $restrictions"
+                    //                     ]
+                    //                 ]
+                    //             ]
+                    //         ]
+                    //     ]);
+
+                    //     $ch = curl_init($apiUrl . '?key=' . $apiKey);
+                    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    //         'Content-Type: application/json'
+                    //     ]);
+                    //     curl_setopt($ch, CURLOPT_POST, true);
+                    //     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+                    //     $response = curl_exec($ch);
+                    //     $responseArray = json_decode($response, true);
+                    //     // if response occur any error!
+                    //     if (is_array($responseArray) && isset($responseArray['error'])) {
+                    //         if ($contact_page) {
+                    //             $response = "Feel free to <b><a href='$contact_page' target='_blank'>'$response' contact us</a></b>! We will contact you shortly.";
+                    //         } else {
+                    //             $response = "We can't understand your query! Please correct your query!";
+                    //         }
+                    //     }
+
+                    //     if (isset($responseArray['candidates'][0]['content']['parts'][0]['text'])) {
+                    //         $response = $responseArray['candidates'][0]['content']['parts'][0]['text'];
+                    //         $response = preg_replace('/\*\*|\*/', '', $response);
+                    //         if ($contact_page) {
+                    //             $response = $response . ". Feel free to <b><a href='$contact_page' target='_blank'>contact us</a></b>";
+                    //         }
+
+
+                    //         try {
+                    //             $ip = getenv('REMOTE_ADDR');
+
+                    //             // Check if the IP is localhost
+                    //             if ($ip === '127.0.0.1' || $ip === '::1') {
+                    //                 $location = "Localhost";
+                    //             } else {
+                    //                 $url = "https://freeipapi.com/api/json/$ip";
+                    //                 $data = file_get_contents($url);
+                    //                 $data = json_decode($data, true);
+
+                    //                 if (is_array($data) && isset($data['countryName'])) {
+                    //                     $countryName = $data['countryName'];
+                    //                     $cityName = $data['cityName'];
+                    //                     $regionName = $data['regionName'];
+                    //                     $zipCode = $data['zipCode'];
+
+                    //                     // Create the response string
+                    //                     $location = "Country: $countryName, City: $cityName, Region: $regionName, Zip Code: $zipCode";
+                    //                 } else {
+                    //                     $location = NULL;
+                    //                 }
+                    //             }
+                    //         } catch (Exception $e) {
+                    //             $location = NULL;
+                    //             $ip = NULL;
+                    //             error_log($e->getMessage());
+                    //         }
+
+
+
+                    //         // store information into 
+                    //         $table = $wpdb->prefix . "mc_bot_chat_history";
+                    //         $wpdb->insert(
+                    //             $table,
+                    //             array(
+                    //                 "query" => $userInput,
+                    //                 "date" => date("Y/m/d"),
+                    //                 "gemini_reply" => $response,
+                    //                 "ip_address" => $ip,
+                    //                 "location" => $location,
+                    //             )
+                    //         );
+
+
+                    //     }
+
+                    //     curl_close($ch);
+
+
+                    // } catch (Exception $e) {
+                    //     echo $e->getMessage();
+                    // }
+
+
+                    try {
+                        $table = $wpdb->prefix . "mc_bot_chat_global_settings";
+                        $arr = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC LIMIT 1");
+                
+                        if (empty($arr)) {
+                            return "Settings not found."; // Handle case where settings are missing
+                        }
+                
                         $apiKey = $arr[0]->gemini_key;
                         $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
                         $business_name = $arr[0]->business_name;
@@ -328,8 +320,7 @@ function superbot_search_answer()
                         $common = "you should reply as for $business_name, $business_description";
                         $restrictions = $arr[0]->restriction;
                         $contact_page = $arr[0]->contact_us_link;
-
-
+                
                         $data = json_encode([
                             'contents' => [
                                 [
@@ -341,87 +332,72 @@ function superbot_search_answer()
                                 ]
                             ]
                         ]);
-
+                
                         $ch = curl_init($apiUrl . '?key=' . $apiKey);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                            'Content-Type: application/json'
-                        ]);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
                         curl_setopt($ch, CURLOPT_POST, true);
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
+                
                         $response = curl_exec($ch);
+                        curl_close($ch);
+                
                         $responseArray = json_decode($response, true);
-                        // if response occur any error!
+                
                         if (is_array($responseArray) && isset($responseArray['error'])) {
+                            // Handle API error
                             if ($contact_page) {
-                                $response = "Feel free to <b><a href='$contact_page' target='_blank'>contact us</a></b>! We will contact you shortly.";
+                                $response = "Feel free to <b><a href='" . esc_url($contact_page) . "' target='_blank'>contact us</a></b>! We will contact you shortly.";
                             } else {
                                 $response = "We can't understand your query! Please correct your query!";
                             }
-                        }
-
-                        if (isset($responseArray['candidates'][0]['content']['parts'][0]['text'])) {
+                        } elseif (isset($responseArray['candidates'][0]['content']['parts'][0]['text'])) {
                             $response = $responseArray['candidates'][0]['content']['parts'][0]['text'];
                             $response = preg_replace('/\*\*|\*/', '', $response);
-                            if ($contact_page) {
-                                $response = $response . ". Feel free to <b><a href='$contact_page' target='_blank'>contact us</a></b>";
-                            }
-
-
+                
+                
                             try {
-                                $ip = getenv('REMOTE_ADDR');
-
-                                // Check if the IP is localhost
+                                $ip = $_SERVER['REMOTE_ADDR']; // Use $_SERVER
+                                $location = null;
+                
                                 if ($ip === '127.0.0.1' || $ip === '::1') {
                                     $location = "Localhost";
                                 } else {
                                     $url = "https://freeipapi.com/api/json/$ip";
                                     $data = file_get_contents($url);
                                     $data = json_decode($data, true);
-
+                
                                     if (is_array($data) && isset($data['countryName'])) {
-                                        $countryName = $data['countryName'];
-                                        $cityName = $data['cityName'];
-                                        $regionName = $data['regionName'];
-                                        $zipCode = $data['zipCode'];
-
-                                        // Create the response string
-                                        $location = "Country: $countryName, City: $cityName, Region: $regionName, Zip Code: $zipCode";
-                                    } else {
-                                        $location = NULL;
+                                        $location = "Country: " . $data['countryName'] . ", City: " . $data['cityName'] . ", Region: " . $data['regionName'] . ", Zip Code: " . $data['zipCode'];
                                     }
                                 }
+                
+                                $table = $wpdb->prefix . "mc_bot_chat_history";
+                                $wpdb->insert(
+                                    $table,
+                                    [
+                                        "query" => $userInput,
+                                        "date" => date("Y/m/d"),
+                                        "gemini_reply" => $response,
+                                        "ip_address" => $ip,
+                                        "location" => $location,
+                                    ]
+                                );
+                
                             } catch (Exception $e) {
-                                $location = NULL;
-                                $ip = NULL;
                                 error_log($e->getMessage());
                             }
-
-
-
-                            // store information into 
-                            $table = $wpdb->prefix . "chat_history";
-                            $wpdb->insert(
-                                $table,
-                                array(
-                                    "query" => $userInput,
-                                    "date" => date("Y/m/d"),
-                                    "gemini_reply" => $response,
-                                    "ip_address" => $ip,
-                                    "location" => $location,
-                                )
-                            );
-
-
+                
+                        } else {
+                            $response = "An unexpected error occurred.";
                         }
-
-                        curl_close($ch);
-
-
+                
+                        echo $response;
+                
                     } catch (Exception $e) {
-                        echo $e->getMessage();
+                        return "An error occurred: " . $e->getMessage();
                     }
+
 
                 }
             }
@@ -434,8 +410,8 @@ function superbot_search_answer()
         wp_die();
     }
 }
-add_action('wp_ajax_search_answer', 'superbot_search_answer');
-add_action('wp_ajax_nopriv_search_answer', 'superbot_search_answer');
+add_action('wp_ajax_search_answer', 'mc_bot_search_answer');
+add_action('wp_ajax_nopriv_search_answer', 'mc_bot_search_answer');
 
 
 
@@ -443,9 +419,9 @@ add_action('wp_ajax_nopriv_search_answer', 'superbot_search_answer');
 /**
  * hook - save_query helps to save query, response and tags, inside page=reply_edit_remove
  */
-add_action('wp_ajax_save_query', 'saveQuery');
-add_action('wp_ajax_nopriv_save_query', 'saveQuery');
-function saveQuery()
+add_action('wp_ajax_save_query', 'mc_bot_saveQuery');
+add_action('wp_ajax_nopriv_save_query', 'mc_bot_saveQuery');
+function mc_bot_saveQuery()
 {
 
 
@@ -458,7 +434,7 @@ function saveQuery()
 
 
     try {
-        $table = $wpdb->prefix . "chats";
+        $table = $wpdb->prefix . "mc_bot_chats";
         $wpdb->insert(
             $table,
             array(
@@ -474,7 +450,7 @@ function saveQuery()
             while ($i < sizeof($tags)) {
                 $tag = trim($tags[$i]);
                 $tag = str_replace('\\', '', $tag);
-                $table = $wpdb->prefix . "chat_terms";
+                $table = $wpdb->prefix . "mc_bot_chat_terms";
                 $wpdb->insert(
                     $table,
                     array(
@@ -505,19 +481,19 @@ function saveQuery()
 /**
  * hook - get_reply helps to fetch summercode exitor data and query and tags data in update form, inside page=reply_edit_remove
  */
-add_action('wp_ajax_get_reply', 'getQuery');
-add_action('wp_ajax_nopriv_get_reply', 'getQuery');
-function getQuery()
+add_action('wp_ajax_get_reply', 'mc_bot_getQuery');
+add_action('wp_ajax_nopriv_get_reply', 'mc_bot_getQuery');
+function mc_bot_getQuery()
 {
     global $wpdb;
 
     $id = sanitize_text_field($_POST['id']);
-    $table = $wpdb->prefix . "chats";
+    $table = $wpdb->prefix . "mc_bot_chats";
 
     $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $id));
 
     if ($result) {
-        $tags_table = $wpdb->prefix . "chat_terms";
+        $tags_table = $wpdb->prefix . "mc_bot_chat_terms";
         $tags = $wpdb->get_results($wpdb->prepare("SELECT tag FROM $tags_table WHERE chatid = %d", $id), ARRAY_A);
         $tags = array_column($tags, 'tag');
 
@@ -539,12 +515,10 @@ function getQuery()
 /**
  * hook - update_query helps to update query , inside page=reply_edit_remove
  */
-add_action('wp_ajax_update_query', 'updateQuery');
-add_action('wp_ajax_nopriv_update_query', 'updateQuery');
-function updateQuery()
+add_action('wp_ajax_update_query', 'mc_bot_updateQuery');
+add_action('wp_ajax_nopriv_update_query', 'mc_bot_updateQuery');
+function mc_bot_updateQuery()
 {
-    // print_r($_POST);
-
     global $wpdb;
 
     $query = sanitize_text_field($_POST['query']);
@@ -555,7 +529,7 @@ function updateQuery()
 
 
     try {
-        $table = $wpdb->prefix . "chats";
+        $table = $wpdb->prefix . "mc_bot_chats";
         $wpdb->update(
             $table,
             array(
@@ -576,7 +550,7 @@ function updateQuery()
             // tags update 
 
 
-            $table = $wpdb->prefix . "chat_terms";
+            $table = $wpdb->prefix . "mc_bot_chat_terms";
             $query = $wpdb->prepare(
                 "SELECT COUNT(*) FROM $table WHERE chatid = %d",
                 $chatid
@@ -586,7 +560,7 @@ function updateQuery()
                 // deleting old ids of chat terms -> tags
                 $i = 0;
                 while ($i < sizeof($tags)) {
-                    $table = $wpdb->prefix . "chat_terms";
+                    $table = $wpdb->prefix . "mc_bot_chat_terms";
                     $wpdb->delete($table, array('chatid' => $id));
                     $i++;
                 }
@@ -598,7 +572,7 @@ function updateQuery()
             while ($i < sizeof($tags)) {
                 $tag = trim($tags[$i]);
                 $tag = str_replace('\\', '', $tag);
-                $table = $wpdb->prefix . "chat_terms";
+                $table = $wpdb->prefix . "mc_bot_chat_terms";
                 $wpdb->insert(
                     $table,
                     array(
@@ -609,7 +583,7 @@ function updateQuery()
                 $i++;
             }
         } else {
-            $table = $wpdb->prefix . "chat_terms";
+            $table = $wpdb->prefix . "mc_bot_chat_terms";
             $query = $wpdb->prepare(
                 "SELECT COUNT(*) FROM $table WHERE chatid = %d",
                 $chatid
@@ -622,7 +596,7 @@ function updateQuery()
                 // deleting old ids of chat terms -> tags
                 $i = 0;
                 while ($i < sizeof($tags)) {
-                    $table = $wpdb->prefix . "chat_terms";
+                    $table = $wpdb->prefix . "mc_bot_chat_terms";
                     $wpdb->delete($table, array('chatid' => $id));
                     $i++;
                 }
@@ -649,19 +623,19 @@ function updateQuery()
 /**
  * hook - delete_query helps to delete query form , inside page=reply_edit_remove
  */
-add_action('wp_ajax_delete_query', 'deleteQuery');
-add_action('wp_ajax_nopriv_delete_query', 'deleteQuery');
-function deleteQuery()
+add_action('wp_ajax_delete_query', 'mc_bot_deleteQuery');
+add_action('wp_ajax_nopriv_delete_query', 'mc_bot_deleteQuery');
+function mc_bot_deleteQuery()
 {
     global $wpdb;
     $id = sanitize_text_field($_POST['chatid']);
 
     try {
-        $table = $wpdb->prefix . "chats";
+        $table = $wpdb->prefix . "mc_bot_chats";
         $wpdb->delete($table, array('id' => $id));
 
 
-        $table = $wpdb->prefix . "chat_terms";
+        $table = $wpdb->prefix . "mc_bot_chat_terms";
         $query = $wpdb->prepare(
             "SELECT COUNT(*) FROM $table WHERE chatid = %d",
             $id
@@ -670,7 +644,7 @@ function deleteQuery()
         if ($count != 0) {
             $i = 0;
             while ($i < $count) {
-                $table = $wpdb->prefix . "chat_terms";
+                $table = $wpdb->prefix . "mc_bot_chat_terms";
                 $wpdb->delete($table, array('chatid' => $id));
                 $i++;
             }
@@ -691,9 +665,9 @@ function deleteQuery()
 /**
  * hook - save_settings helps to save chat global settings into db.
  */
-add_action('wp_ajax_save_settings', 'chatSettings');
-add_action('wp_ajax_nopriv_save_settings', 'chatSettings');
-function chatSettings()
+add_action('wp_ajax_save_settings', 'mc_bot_chatSettings');
+add_action('wp_ajax_nopriv_save_settings', 'mc_bot_chatSettings');
+function mc_bot_chatSettings()
 {
     global $wpdb;
 
@@ -706,7 +680,7 @@ function chatSettings()
         $restriction = str_replace('\\', '', $_POST['restriction']);
 
 
-        $table = $wpdb->prefix . "chat_global_settings";
+        $table = $wpdb->prefix . "mc_bot_chat_global_settings";
         $wpdb->insert(
             $table,
             array(
@@ -729,12 +703,12 @@ function chatSettings()
 
 
 // hook - view_settings helps to displat settings value inside settings form.
-add_action('wp_ajax_view_settings', 'viewSettings');
-add_action('wp_ajax_nopriv_view_settings', 'viewSettings');
-function viewSettings()
+add_action('wp_ajax_view_settings', 'mc_bot_viewSettings');
+add_action('wp_ajax_nopriv_view_settings', 'mc_bot_viewSettings');
+function mc_bot_viewSettings()
 {
     global $wpdb;
-    $table = $wpdb->prefix . "chat_global_settings";
+    $table = $wpdb->prefix . "mc_bot_chat_global_settings";
     $arr = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC LIMIT 1");
     echo json_encode($arr, true);
     exit;
@@ -755,7 +729,7 @@ function exportCSV()
 
     // Output column headers
     fputcsv($output, array('id', 'question', 'answer'));
-    $table = $wpdb->prefix . "chats";
+    $table = $wpdb->prefix . "mc_bot_chats";
     $rows = $wpdb->get_results("SELECT id, question, answer FROM $table", ARRAY_A);
     foreach ($rows as $row) {
         fputcsv($output, $row);
@@ -765,13 +739,13 @@ function exportCSV()
     exit();
 }
 
-// hook - import_csv helps to import csv file data inside wp_chats table.
+
 add_action('wp_ajax_import_csv', 'importCSV');
 add_action('wp_ajax_nopriv_import_csv', 'importCSV');
 function importCSV()
 {
     global $wpdb;
-    $table = $wpdb->prefix . "chats";
+    $table = $wpdb->prefix . "mc_bot_chats";
 
     // Check if a file was uploaded
     if (isset($_FILES['file'])) {
@@ -784,7 +758,6 @@ function importCSV()
             // Skip the first line (header row)
             fgetcsv($handle);
 
-            // Loop through the file and insert data into the wp_chats table
             while (($data = fgetcsv($handle, 1000, ',')) !== false) {
                 $wpdb->insert(
                     $table,

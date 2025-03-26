@@ -1,15 +1,16 @@
 <?php
 /*
- * Plugin Name:       Super Bot
- * Description:       This is a bot assistant, which also powered by Google Gemini API. It can reply against queries 24x7 to website visitors.
- * Version:           1.1.1
+ * Plugin Name: Super Bot
+ * Plugin URI: https://wordpress.org/plugins/superbot/
+ * Description: An AI-powered assistant for your WordPress site, driven by Google Gemini API, providing 24x7 smart responses to visitor queries!
+ * Version: 1.0.0
  * Requires at least: 5.2
- * Requires PHP:      7.2
- * Author:            Shimanta Das
- * Author URI:        https://microcodes.in/
- * License:           GPL v2 or later
- * License URI:       https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
- * Text Domain:       bot, super bot, chatbot 
+ * Requires PHP: 7.2
+ * Author: Shimanta Das
+ * Author URI: https://microcodes.in/
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+ * Text Domain: mc_bot
  */
 
 if (!defined('ABSPATH')) {
@@ -18,36 +19,50 @@ if (!defined('ABSPATH')) {
 
 require ('functions.php');
 
-// enqueue css and js scripts
-function superbot_enqueue_assets()
+
+
+function mc_bot_enqueue_assets()
 {
-    // Enqueue Google Fonts
-    wp_enqueue_style('superbot-material-icons-outlined', 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0', [], null);
-    wp_enqueue_style('superbot-material-icons-rounded', 'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0', [], null);
+    // Enqueue Styles
+    wp_enqueue_style('mc_bot-material-icons-outlined', 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0', [], null);
+    wp_enqueue_style('mc_bot-material-icons-rounded', 'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0', [], null);
+    wp_enqueue_style('mc_bot-bootstrap-icons-css', "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css", [], '1.0.0');
+    wp_enqueue_style('mc_bot-bootstrap-css', plugins_url('assets/css/bootstrap.min.css', __FILE__), [], '1.0.0');
+    wp_enqueue_style('mc_bot-custom-css', plugins_url('assets/css/custom.css', __FILE__), [], '1.0.0'); // Added missing file
+    wp_enqueue_style('mc_bot-datatables-css', plugins_url('assets/DataTables/datatables.min.css', __FILE__), [], '1.0.0');
+    wp_enqueue_style('mc_bot-summernote-css', plugins_url('assets/summernote/summernote.css', __FILE__), [], '1.0.0');
+    wp_enqueue_style('mc_bot-style-css', plugins_url('assets/css/style.css', __FILE__), [], '1.0.0');
 
-    // // Enqueue plugin styles and scripts
-    wp_enqueue_style('superbot-style', plugins_url('assets/css/style.css', __FILE__), [], '1.0.0');
-    wp_enqueue_script('superbot-jquery', plugins_url('assets/js/jquery.js', __FILE__), ['jquery'], '1.0.0', true);
-    wp_enqueue_script('superbot-script', plugins_url('assets/js/script.js', __FILE__), ['jquery'], '1.0.0', true);
-
-    // Pass the AJAX URL to the script
+    // Enqueue Scripts
+    wp_enqueue_script('jquery');
+    wp_enqueue_script('mc_bot-bootstrap-bundle-js', plugins_url('assets/js/bootstrap.bundle.min.js', __FILE__), ['jquery'], '1.0.0', true); // Added missing file
+    wp_enqueue_script('mc_bot-chart-js', plugins_url('assets/js/chart.js', __FILE__), ['jquery'], '1.0.0', true);
+    wp_enqueue_script('mc_bot-datatables-js', plugins_url('assets/DataTables/datatables.min.js', __FILE__), ['jquery'], '1.0.0', true);
+    wp_enqueue_script('mc_bot-summernote-js', plugins_url('assets/summernote/summernote.js', __FILE__), ['jquery'], '1.0.0', true);
+    wp_enqueue_script('mc_bot-sweetalert-js', plugins_url('assets/js/sweetalert.js', __FILE__), ['jquery'], '1.0.0', true);
+    wp_enqueue_script('mc_bot-script-js', plugins_url('assets/js/script.js', __FILE__), ['jquery'], '1.0.0', true);
+   
+    // Pass AJAX URL to scripts
     wp_localize_script(
-        'superbot-script',
-        'superbot_ajax',
+        'mc_bot-script-js',
+        'mc_bot_ajax',
         array(
             'ajax_url' => admin_url('admin-ajax.php')
         )
     );
 }
-add_action('wp_enqueue_scripts', 'superbot_enqueue_assets');
+
+add_action('wp_enqueue_scripts', 'mc_bot_enqueue_assets');
+
+
 
 // activation hook
-function superbot_activate()
+function mc_bot_activate()
 {
     global $wpdb;
-    $table_name = $wpdb->prefix . 'chats';
+    $table_name = $wpdb->prefix . 'mc_bot_chats';
 
-    if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+    if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) != $table_name) {
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $table_name (
@@ -61,8 +76,8 @@ function superbot_activate()
         dbDelta($sql);
     }
 
-    $table_name = $wpdb->prefix . 'chat_terms';
-    if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+    $table_name = $wpdb->prefix . 'mc_bot_chat_terms';
+    if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) != $table_name) {
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $table_name (
@@ -76,9 +91,9 @@ function superbot_activate()
         dbDelta($sql);
     }
 
-    // Create the chat_history table if it doesn't exist
-    $history_table_name = $wpdb->prefix . 'chat_history';
-    if ($wpdb->get_var("SHOW TABLES LIKE '$history_table_name'") != $history_table_name) {
+    // Create the mc_bot_chat_history table if it doesn't exist
+    $history_table_name = $wpdb->prefix . 'mc_bot_chat_history';
+    if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) != $history_table_name) {
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $history_table_name (
@@ -95,9 +110,9 @@ function superbot_activate()
         dbDelta($sql);
     }
 
-    // Create the chat_global_settings table if it doesn't exist
-    $history_table_name = $wpdb->prefix . 'chat_global_settings';
-    if ($wpdb->get_var("SHOW TABLES LIKE '$history_table_name'") != $history_table_name) {
+    // Create the mc_bot_chat_global_settings table if it doesn't exist
+    $history_table_name = $wpdb->prefix . 'mc_bot_chat_global_settings';
+    if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name)) != $history_table_name) {
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $history_table_name (
@@ -115,12 +130,13 @@ function superbot_activate()
     }
 
 }
-register_activation_hook(__FILE__, 'superbot_activate');
+register_activation_hook(__FILE__, 'mc_bot_activate');
+
 
 // add menu to admin panel page
-function superbot_pages_register()
+function mc_bot_activate_pages_register()
 {
-    $plugin_slug = "chat_admin";
+    $plugin_slug = "mc_bot_admin";
 
     add_menu_page('Super Bot', 'Super Bot', 'edit', $plugin_slug, null, plugins_url('icon.png', __FILE__), '58', );
 
@@ -160,7 +176,7 @@ function superbot_pages_register()
         'chat_global_settings_function'
     );
 }
-add_action('admin_menu', 'superbot_pages_register');
+add_action('admin_menu', 'mc_bot_activate_pages_register');
 
 function dashboard_function()
 {
@@ -183,7 +199,7 @@ function chat_global_settings_function()
 
 
 // enable superbot to right-footer area.
-function superbot_chatbot_markup()
+function mc_bot_chatbot_markup()
 {
     ?>
     <!-- floating bot icon -->
@@ -210,7 +226,7 @@ function superbot_chatbot_markup()
 
     <?php
 }
-add_action('wp_footer', 'superbot_chatbot_markup');
+add_action('wp_footer', 'mc_bot_chatbot_markup');
 
 
 
