@@ -1,48 +1,49 @@
-# Super Bot
+# SuperBot - AI-Powered Chat Plugin for WordPress
 
-This plugin provides several custom hooks for managing queries, settings, and CSV data in a WordPress environment. Below is a detailed description of each hook and its functionality. Some of the most popular WordPress themes like Astra, Divi, OceanWP, GeneratePress, Neve, Hestia, Avada, Sydney, Zakra, and Twenty Twenty-One etc. could works with it perfectly along with your custom theme too!
+SuperBot is a powerful AI-driven chatbot plugin for WordPress that enhances visitor interaction on your website. Whether you have a CMS website, an eCommerce store, or any other type of site, SuperBot seamlessly integrates with any WordPress theme, including custom themes and page builders.
 
-## Hooks Overview
+## Features
 
-### 1. `delete_query`
-- **Description:** Deletes a query form.
-- **Location:** Inside the `page=reply_edit_remove` page.
-- **Functionality:** Removes a specific query from the system.
+### 1. Manage Queries
+- Add questions and answers manually.
+- Export queries in CSV format.
+- Import queries from a CSV file.
 
-### 2. `update_query`
-- **Description:** Updates an existing query.
-- **Location:** Inside the `page=reply_edit_remove` page.
-- **Functionality:** Modifies the details of an existing query.
+### 2. Advanced Dashboard
+- View recent chats.
+- Analyze chat history with graphical representation.
 
-### 3. `get_reply`
-- **Description:** Fetches data from the Summernote editor, along with query and tags data, to populate the update form.
-- **Location:** Inside the `page=reply_edit_remove` page.
-- **Functionality:** Retrieves relevant data for a specific query, allowing for updates with the fetched data.
+### 3. AI-Powered Responses
+- Uses Google Gemini AI to answer unknown visitor queries dynamically.
 
-### 4. `save_query`
-- **Description:** Saves a query, along with its response and associated tags.
-- **Location:** Inside the `page=reply_edit_remove` page.
-- **Functionality:** Stores the query and its related data in the database.
+### 4. User Interaction Management
+- Users can update and refine chat responses.
 
-### 5. `save_settings`
-- **Description:** Saves global chat settings into the database.
-- **Location:** Inside the settings form.
-- **Functionality:** Updates and stores global settings for the chat functionality.
+## Installation
+1. Download the SuperBot plugin.
+2. Upload it to your WordPress site (`wp-content/plugins/` directory).
+3. Activate the plugin from the WordPress admin dashboard.
+4. Configure settings and start engaging visitors.
 
-### 6. `view_settings`
-- **Description:** Displays the current settings values inside the settings form.
-- **Location:** Inside the settings form.
-- **Functionality:** Fetches and displays saved settings for user review and updates.
+## Compatibility
+- Works with all WordPress themes (custom-built or page builders like Elementor, Bricks, and Divi).
+- Compatible with any CMS-based or eCommerce site.
 
-### 7. `import_csv`
-- **Description:** Imports data from a CSV file into the `wp_chats` table.
-- **Location:** In the CSV import functionality.
-- **Functionality:** Bulk imports chat data from a CSV file into the WordPress database.
+## Usage
+1. Navigate to the SuperBot settings in your WordPress dashboard.
+2. Add queries or import them via CSV.
+3. View real-time chat insights on the dashboard.
+4. Enable AI assistance for automated responses.
 
-### 8. `export_csv`
-- **Description:** Exports table data into a CSV format.
-- **Location:** In the CSV export functionality.
-- **Functionality:** Allows downloading of data stored in the table as a CSV file.
+## Contributing
+Feel free to contribute by submitting issues, feature requests, or pull requests.
+
+## License
+SuperBot is open-source and available under the MIT License.
+
+## Support
+For any issues or queries, contact us at [iamshimantadas@gmail.com](mailto:iamshimantadas@gmail.com) or visit [microcodes.in](https://microcodes.in).
+
 
 ## Author
 
@@ -56,7 +57,5 @@ This plugin provides several custom hooks for managing queries, settings, and CS
 - 👹 [Facebook](https://www.facebook.com/profile.php?id=100078406112813)
 - 📸 [Instagram](https://www.instagram.com/meshimanta/?hl=en)
 - 🐦 [Twitter](https://mobile.twitter.com/Shimantadas247)
-- 📬 [Telegram](https://t.me/microcodesofficial)
 - 🎦 [YouTube](https://youtube.com/channel/UCrbf6B0CU9x-I4bQOYbJVGw)
-
 ---

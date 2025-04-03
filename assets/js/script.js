@@ -405,3 +405,55 @@ function deleteForm(id, chatquestion) {
 
 
 /** admin/dashboard.php END  */
+
+
+/** settings.php ajax script start */
+jQuery(document).ready(function () {
+    // Fetch latest record if present
+    jQuery.ajax({
+        url: ajaxurl,
+        method: 'POST',
+        data: { action: 'view_settings' },
+        success: function (res) {
+            let obj = JSON.parse(res)[0];
+            jQuery('#gemini-key').val(obj.gemini_key);
+            jQuery('#contact-us-page').val(obj.contact_us_link);
+            jQuery('#business-name').val(obj.business_name);
+            jQuery('#business-description').val(obj.business_description);
+            jQuery('#restrictions').val(obj.restriction);
+        },
+        error: function () {
+            console.error("An error occurred! Contact system admin.");
+        }
+    });
+
+    // Save settings
+    jQuery('#save-btn').click(function () {
+        let data = {
+            action: 'save_settings',
+            key: jQuery('#gemini-key').val(),
+            contact: jQuery('#contact-us-page').val(),
+            business_name: jQuery('#business-name').val(),
+            description: jQuery('#business-description').val(),
+            restriction: jQuery('#restrictions').val()
+        };
+
+        jQuery.ajax({
+            url: ajaxurl,
+            method: 'POST',
+            data: data,
+            success: function (res) {
+                if (res === "success") {
+                    Swal.fire({ title: "New Record Saved!", icon: "success" });
+                    window.location.reload();
+                } else {
+                    Swal.fire({ title: "Record Not Saved!", icon: "error" });
+                }
+            },
+            error: function (res) {
+                console.error(res);
+            }
+        });
+    });
+});
+/** settings.php ajax script end */
