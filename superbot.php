@@ -10,7 +10,7 @@
  * Author URI: https://microcodes.in/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
- * Text Domain: mc_bot
+ * Text Domain: super-bot
  */
 
 if (!defined('ABSPATH')) {

@@ -1,4 +1,4 @@
-=== SuperBot ===
+=== Super Bot ===
 Contributors: microcodes
 Donate link: https://iamshimantadas.blogspot.com/2025/04/donation.html
 Tags: chatbot, bot, super bot
