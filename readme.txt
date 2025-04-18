@@ -1,9 +1,9 @@
 === SuperBot ===
-Contributors: takayukister
-Donate link: https://microcodes.in/
-Tags: superbot, bot, chatbot
-Tested up to: 6.7.2
-Requires at least: 5.0.1
+Contributors: microcodes
+Donate link: https://iamshimantadas.blogspot.com/2025/04/donation.html
+Tags: chatbot, bot, super bot
+Tested up to: 6.8
+Requires at least: 6.6
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -11,30 +11,24 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Simple chatbot assistant plugin designed for any CMS or Ecommerce website.
 
+24x7 AI Powered Chatbot for your website's visitors!
+
 == Description ==
 
-SuperBot is a powerful AI-driven chatbot plugin for WordPress that enhances visitor interaction on your website. Whether you have a CMS website, an eCommerce store, or any other type of site, SuperBot seamlessly integrates with any WordPress theme, including custom themes and page builders.
+SuperBot is plugin, which is an AI-powered assistant for your WordPress site, driven by Google Gemini API, providing 24x7 smart responses to visitor queries!
 
+= Support =
 
-= Any Support =
-Maintaining and improving SuperBot requires community support. You can contribute in multiple ways:
-
-Testing – Report bugs and suggest improvements.
-Coding – Contribute to the plugin’s development.
-Translating – Help make the plugin available in different languages.
-Assisting Users – Help others in support forums.
-Donations – Financial contributions help sustain development.
-We appreciate all forms of support! For any inquiries, contact us at iamshimantadas@gmail.com or visit microcodes.in.
-
+If you need any support regarding this plugin, you can email me [personal email](iamshimantadas@gmail.com).
 
 = Privacy notices =
 
 With the default configuration, this plugin, in itself, does not:
 
-* track users by stealth;
-* write any user personal data to the database;
-* send any data to external servers;
-* google's gemini reply depend upon LLM Model.
+* Does not track users by stealth—any data collection is clearly disclosed.
+* Does not store or write personal user data to any database.
+* Does not send user data to external servers without explicit consent.
+* AI-generated replies may vary and are not manually controlled—responses are automated and should not be considered professional or legal advice. 
 
 
 == Installation ==
@@ -62,5 +56,17 @@ Upload the extracted folder to wp-content/plugins/ via FTP.
 Log in to WordPress Dashboard → Plugins and activate SuperBot.
 
 
+== Screenshots ==
 
-== Upgrade Notice ==
+1. Front End
+2. Ticker Stiings
+3. Back End
+
+== Changelog ==
+
+= 1.0.0 =
+
+* Initial version
+
+== Upgrade notice ==
+N/A
